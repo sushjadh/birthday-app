@@ -15,6 +15,7 @@
   label.upload-label { background: #e2e8f0; color: #333; padding: 6px 12px; border-radius: 5px; cursor: pointer; display: inline-block; margin: 6px 0; }
   textarea { width: 90%; max-width: 280px; margin: 6px 0; border-radius: 5px; border: 1px solid #ccc; padding: 6px; }
   img.birthday-banner { width: 95%; height: auto; border-radius: 10px; margin: 10px 0; }
+  img.final-photo { width: 60%; max-width: 250px; height: auto; border-radius: 10px; margin: 10px 0; }
 </style>
 </head>
 <body>
@@ -32,15 +33,101 @@
 <div id="final" class="section hidden">
   <h2>All Done! 🎉</h2>
   <p>Thank you for letting me plan this day with you. Let’s keep collecting these small, silly, beautiful moments forever.<br>With all my love,<br>Sushma 💛</p>
-  <img src="https://raw.githubusercontent.com/sushjadh/birthday-app/main/IMG_2082.jpg" alt="Closing Photo" class="birthday-banner" />
+  <img src="https://raw.githubusercontent.com/sushjadh/birthday-app/main/IMG_2082.jpg" alt="Closing Photo" class="final-photo" />
 </div>
+
 <script>
-const cues=["Hope you enjoyed the cake. What are you wishing for?","Morning coffee thoughts?","Silent wish for yourself.","Birthday breakfast choice?","Win a game for a surprise.","Rest and Suggu time.","Pick your dinner vibe.","What will you remember today?"];
-let completed=0;
-function startAdventure(){document.getElementById('start').classList.add('hidden');document.getElementById('plan').classList.remove('hidden');const c=document.getElementById('cues');cues.forEach((q,i)=>{const d=document.createElement('div');d.className='cue-card';const f='file-upload-'+i;d.innerHTML=`<p>${q}</p><label for='${f}' class='upload-label'>Upload Memory</label><input type='file' id='${f}' accept='image/*' capture='environment' style='display:none'/><br><textarea rows='2' placeholder='Feeling?'></textarea><br><button onclick='markDone(this)'>Done ✅</button>`;c.appendChild(d);const inp=d.querySelector('#'+f);inp.addEventListener('change',e=>{const file=e.target.files[0];if(!file)return;const r=new FileReader();r.onload=f=>{const img=document.createElement('img');img.src=f.target.result;img.style.maxWidth='100%';img.style.borderRadius='8px';img.style.margin='6px 0';d.querySelector('label.upload-label').replaceWith(img);inp.disabled=true;};r.readAsDataURL(file);});});}
-function markDone(b){b.disabled=true;completed++;document.getElementById('progress-bar').style.width=(completed/cues.length*100)+'%';if(completed===cues.length){setTimeout(()=>{document.getElementById('plan').classList.add('hidden');document.getElementById('final').classList.remove('hidden');},300);}
+const cues = [
+  "Hope you enjoyed the cake. What are you wishing for?",
+  "Morning coffee thoughts?",
+  "Silent wish for yourself.",
+  "Birthday breakfast choice?",
+  "Win a game for a surprise.",
+  "Rest and Suggu time.",
+  "Pick your dinner vibe.",
+  "What will you remember today?"
+];
+let completed = 0;
+let responses = [];
+
+function startAdventure(){
+  document.getElementById('start').classList.add('hidden');
+  document.getElementById('plan').classList.remove('hidden');
+  const c = document.getElementById('cues');
+  cues.forEach((q,i)=>{
+    const d = document.createElement('div');
+    d.className = 'cue-card';
+    const f = 'file-upload-'+i;
+    d.innerHTML = `
+      <p>${q}</p>
+      <label for='${f}' class='upload-label'>Upload Memory</label>
+      <input type='file' id='${f}' accept='image/*' capture='environment' style='display:none'/>
+      <br>
+      <textarea rows='2' placeholder='Feeling?'></textarea>
+      <br>
+      <button onclick='markDone(this, ${i})'>Done ✅</button>
+    `;
+    c.appendChild(d);
+
+    const inp = d.querySelector('#'+f);
+    inp.addEventListener('change', e => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const r = new FileReader();
+      r.onload = f => {
+        const img = document.createElement('img');
+        img.src = f.target.result;
+        img.style.maxWidth = '100%';
+        img.style.borderRadius = '8px';
+        img.style.margin = '6px 0';
+        d.querySelector('label.upload-label').replaceWith(img);
+        inp.dataset.img = f.target.result; // store base64 for later collection
+        inp.disabled = true;
+      };
+      r.readAsDataURL(file);
+    });
+  });
+}
+
+function markDone(button, index){
+  const card = button.parentElement;
+  const textareaValue = card.querySelector('textarea').value;
+  const imgInput = card.querySelector('input[type="file"]');
+  const imgData = imgInput.dataset.img || null;
+
+  responses.push({
+    cue: cues[index],
+    text: textareaValue,
+    image: imgData
+  });
+
+  button.remove();
+  completed++;
+  document.getElementById('progress-bar').style.width = (completed / cues.length * 100) + '%';
+
+  if (completed === cues.length) {
+    setTimeout(() => {
+      document.getElementById('plan').classList.add('hidden');
+      document.getElementById('final').classList.remove('hidden');
+      addDownloadButton();
+    }, 300);
+  }
+}
+
+function addDownloadButton(){
+  const btn = document.createElement('button');
+  btn.innerText = "Download Your Memories 📥";
+  btn.onclick = downloadResponses;
+  document.getElementById('final').appendChild(btn);
+}
+
+function downloadResponses(){
+  const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(responses, null, 2));
+  const dlAnchor = document.createElement('a');
+  dlAnchor.setAttribute("href", dataStr);
+  dlAnchor.setAttribute("download", "birthday_memories.json");
+  dlAnchor.click();
 }
 </script>
 </body>
 </html>
-
