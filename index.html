@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Rishabh's Birthday Bash 🎉</title>
+<style>
+  body { font-family: sans-serif; background: #fdfaf6; margin: 0; padding: 0; text-align: center; color: #333; }
+  .section { padding: 40px 20px; }
+  button { background: #f5c26b; border: none; padding: 15px 25px; font-size: 18px; border-radius: 10px; cursor: pointer; }
+  .hidden { display: none; }
+  .progress { width: 80%; background: #ddd; border-radius: 20px; margin: 20px auto; }
+  .progress-bar { width: 0%; height: 20px; background: #f5c26b; border-radius: 20px; transition: width 0.5s; }
+  .cue-card { background: #fff; padding: 20px; margin: 20px auto; width: 90%; max-width: 400px; border-radius: 15px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+  input[type="file"] { display: none; }
+  label.upload-label { background: #e2e8f0; color: #333; padding: 10px 20px; border-radius: 8px; cursor: pointer; display: inline-block; margin: 10px 0; }
+  label.upload-label::before { content: '📸 '; }
+  textarea { width: 90%; max-width: 350px; margin: 10px 0; border-radius: 8px; border: 1px solid #ccc; padding: 10px; }
+</style>
+</head>
+<body>
+<div id="start" class="section">
+  <h1>Rishabh's Birthday Bash 🎉</h1>
+  <p>Your birthday adventure starts now.</p>
+  <button onclick="startAdventure()">Let's Start</button>
+</div>
+
+<div id="plan" class="section hidden">
+  <h2>Your Birthday Plan</h2>
+  <div class="progress"><div id="progress-bar" class="progress-bar"></div></div>
+  <div id="cues"></div>
+</div>
+
+<div id="final" class="section hidden">
+  <h2>All Done! 🎉</h2>
+  <p>Thank you for letting me plan this day with you. Seeing you smile, laugh, and live fully is my favourite thing in the world. I hope today made you feel loved, seen, and celebrated the way you deserve. Let’s keep collecting these small, silly, beautiful moments forever.<br>With all my love,<br>Sushma 💛</p>
+  <img src="https://via.placeholder.com/300" alt="Closing Photo" style="width: 80%; border-radius: 15px; margin-top: 20px;" />
+</div>
+
+<script>
+const cues = [
+  "First bite of your birthday, first wish of the year. What are you wishing for?",
+  "Birthday boy, your first mission: find your coffee where your day usually begins.",
+  "Time to get your blessings for this year. Make one silent wish for yourself.",
+  "If you could have one breakfast every birthday, what would it be? Let’s see how today’s matches.",
+  "Your mission: beat me in at least one game today. If you win, you get a surprise. If I win, I get a birthday hug.",
+  "Birthday pause. What’s your comfort movie or show when you want to feel cosy?",
+  "Your final birthday mission: pick your colour vibe for tonight’s dinner and celebration.",
+  "Before we end your birthday, what’s one thing you want to remember about today?"
+];
+
+let completed = 0;
+
+function startAdventure() {
+  document.getElementById('start').classList.add('hidden');
+  document.getElementById('plan').classList.remove('hidden');
+  const cuesDiv = document.getElementById('cues');
+  cues.forEach((cue, index) => {
+    const card = document.createElement('div');
+    card.className = 'cue-card';
+    const fileInputId = 'file-upload-' + index;
+    card.innerHTML = `<p>${cue}</p>
+      <label for='${fileInputId}' class='upload-label'>Upload Memory</label>
+      <input type='file' id='${fileInputId}' accept='image/*' capture='environment' /><br>
+      <textarea rows='3' placeholder='How are you feeling?'></textarea><br>
+      <button onclick='markDone(this)'>Mark as Done</button>`;
+    cuesDiv.appendChild(card);
+  });
+}
+
+function markDone(button) {
+  button.disabled = true;
+  button.innerText = 'Completed ✅';
+  completed++;
+  document.getElementById('progress-bar').style.width = (completed / cues.length * 100) + '%';
+  if (completed === cues.length) {
+    setTimeout(() => {
+      document.getElementById('plan').classList.add('hidden');
+      document.getElementById('final').classList.remove('hidden');
+      confetti();
+    }, 500);
+  }
+}
+
+function confetti() {
+  const duration = 3000;
+  const end = Date.now() + duration;
+  const interval = setInterval(() => {
+    if (Date.now() > end) {
+      clearInterval(interval);
+      return;
+    }
+    const conf = document.createElement('div');
+    conf.innerText = '🎉';
+    conf.style.position = 'fixed';
+    conf.style.left = Math.random() * 100 + '%';
+    conf.style.top = '-20px';
+    conf.style.fontSize = '24px';
+    conf.style.animation = 'fall 3s linear';
+    document.body.appendChild(conf);
+    setTimeout(() => conf.remove(), 3000);
+  }, 100);
+}
+</script>
+<style>
+@keyframes fall {
+  to { transform: translateY(100vh); opacity: 0; }
+}
+</style>
+
+</body>
+</html>
