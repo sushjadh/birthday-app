@@ -16,11 +16,13 @@
   label.upload-label { background: #e2e8f0; color: #333; padding: 10px 20px; border-radius: 8px; cursor: pointer; display: inline-block; margin: 10px 0; }
   label.upload-label::before { content: '📸 '; }
   textarea { width: 90%; max-width: 350px; margin: 10px 0; border-radius: 8px; border: 1px solid #ccc; padding: 10px; }
+  img.birthday-banner { max-width: 80%; border-radius: 15px; margin: 20px 0; }
 </style>
 </head>
 <body>
 <div id="start" class="section">
   <h1>Rishabh's Birthday Bash 🎉</h1>
+  <img src="https://i.imgur.com/UkZkm0p.png" alt="Happy Birthday" class="birthday-banner" />
   <p>Your birthday adventure starts now.</p>
   <button onclick="startAdventure()">Let's Start</button>
 </div>
@@ -34,17 +36,17 @@
 <div id="final" class="section hidden">
   <h2>All Done! 🎉</h2>
   <p>Thank you for letting me plan this day with you. Seeing you smile, laugh, and live fully is my favourite thing in the world. I hope today made you feel loved, seen, and celebrated the way you deserve. Let’s keep collecting these small, silly, beautiful moments forever.<br>With all my love,<br>Sushma 💛</p>
-  <img src="https://via.placeholder.com/300" alt="Closing Photo" style="width: 80%; border-radius: 15px; margin-top: 20px;" />
+  <img src="https://drive.google.com/file/d/1qZJzLq4l5IXH_k0j0EPbtDNBLuIetH2q/view?usp=sharing" alt="Closing Photo" style="width: 80%; border-radius: 15px; margin-top: 20px;" />
 </div>
 
 <script>
 const cues = [
-  "First bite of your birthday, first wish of the year. What are you wishing for?",
-  "Birthday boy, your first mission: find your coffee where your day usually begins.",
+  "I hope you enjoyed the cake and rasmalai. What are you wishing for?",
+  "Birthday boy, Very Good Morning! Here's you coffee. What changes are you willing to make in your mornings?",
   "Time to get your blessings for this year. Make one silent wish for yourself.",
-  "If you could have one breakfast every birthday, what would it be? Let’s see how today’s matches.",
+  "If you could have one breakfast every birthday, what would it be? Let’s decide the place and we can have brunch",
   "Your mission: beat me in at least one game today. If you win, you get a surprise. If I win, I get a birthday hug.",
-  "Birthday pause. What’s your comfort movie or show when you want to feel cosy?",
+  "Birthday pause. Lets take rest and spend some time with our Suggu",
   "Your final birthday mission: pick your colour vibe for tonight’s dinner and celebration.",
   "Before we end your birthday, what’s one thing you want to remember about today?"
 ];
@@ -65,6 +67,27 @@ function startAdventure() {
       <textarea rows='3' placeholder='How are you feeling?'></textarea><br>
       <button onclick='markDone(this)'>Mark as Done</button>`;
     cuesDiv.appendChild(card);
+
+    const input = card.querySelector(`#${fileInputId}`);
+    input.addEventListener('change', (event) => {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = document.createElement('img');
+        img.src = e.target.result;
+        img.style.maxWidth = '100%';
+        img.style.borderRadius = '10px';
+        img.style.margin = '10px 0';
+
+        const label = card.querySelector('label.upload-label');
+        label.replaceWith(img);
+
+        input.disabled = true;
+      };
+      reader.readAsDataURL(file);
+    });
   });
 }
 
