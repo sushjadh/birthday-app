@@ -6,130 +6,41 @@
 <title>Rishabh's Birthday Bash 🎉</title>
 <style>
   body { font-family: sans-serif; background: #fdfaf6; margin: 0; padding: 0; text-align: center; color: #333; }
-  .section { padding: 40px 20px; }
-  button { background: #f5c26b; border: none; padding: 15px 25px; font-size: 18px; border-radius: 10px; cursor: pointer; }
+  .section { padding: 15px 8px; }
+  button { background: #f5c26b; border: none; padding: 8px 16px; font-size: 14px; border-radius: 6px; cursor: pointer; }
   .hidden { display: none; }
-  .progress { width: 80%; background: #ddd; border-radius: 20px; margin: 20px auto; }
-  .progress-bar { width: 0%; height: 20px; background: #f5c26b; border-radius: 20px; transition: width 0.5s; }
-  .cue-card { background: #fff; padding: 20px; margin: 20px auto; width: 90%; max-width: 400px; border-radius: 15px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-  input[type="file"] { display: none; }
-  label.upload-label { background: #e2e8f0; color: #333; padding: 10px 20px; border-radius: 8px; cursor: pointer; display: inline-block; margin: 10px 0; }
-  label.upload-label::before { content: '📸 '; }
-  textarea { width: 90%; max-width: 350px; margin: 10px 0; border-radius: 8px; border: 1px solid #ccc; padding: 10px; }
-  img.birthday-banner { max-width: 80%; border-radius: 15px; margin: 20px 0; }
+  .progress { width: 80%; background: #ddd; border-radius: 15px; margin: 10px auto; }
+  .progress-bar { width: 0%; height: 12px; background: #f5c26b; border-radius: 15px; transition: width 0.5s; }
+  .cue-card { background: #fff; padding: 10px; margin: 10px auto; width: 90%; max-width: 300px; border-radius: 10px; box-shadow: 0 0 6px rgba(0,0,0,0.1); }
+  label.upload-label { background: #e2e8f0; color: #333; padding: 6px 12px; border-radius: 5px; cursor: pointer; display: inline-block; margin: 6px 0; }
+  textarea { width: 90%; max-width: 280px; margin: 6px 0; border-radius: 5px; border: 1px solid #ccc; padding: 6px; }
+  img.birthday-banner { width: 95%; height: auto; border-radius: 10px; margin: 10px 0; }
 </style>
 </head>
 <body>
 <div id="start" class="section">
   <h1>Rishabh's Birthday Bash 🎉</h1>
-  <img src="https://pin.it/5n9u1VpdV" alt="Happy Birthday" class="birthday-banner" />
+  <img src="https://raw.githubusercontent.com/sushjadh/birthday-app/main/_%20(4).jpeg" alt="Happy Birthday" class="birthday-banner" />
   <p>Your birthday adventure starts now.</p>
   <button onclick="startAdventure()">Let's Start</button>
 </div>
-
 <div id="plan" class="section hidden">
   <h2>Your Birthday Plan</h2>
   <div class="progress"><div id="progress-bar" class="progress-bar"></div></div>
   <div id="cues"></div>
 </div>
-
 <div id="final" class="section hidden">
   <h2>All Done! 🎉</h2>
-  <p>Thank you for letting me plan this day with you. Seeing you smile, laugh, and live fully is my favourite thing in the world. I hope today made you feel loved, seen, and celebrated the way you deserve. Let’s keep collecting these small, silly, beautiful moments forever.<br>With all my love,<br>Sushma 💛</p>
-  <img src="https://drive.google.com/file/d/1qZJzLq4l5IXH_k0j0EPbtDNBLuIetH2q/view?usp=sharing" alt="Closing Photo" style="width: 80%; border-radius: 15px; margin-top: 20px;" />
+  <p>Thank you for letting me plan this day with you. Let’s keep collecting these small, silly, beautiful moments forever.<br>With all my love,<br>Sushma 💛</p>
+  <img src="https://raw.githubusercontent.com/sushjadh/birthday-app/main/IMG_2082.jpg" alt="Closing Photo" class="birthday-banner" />
 </div>
-
 <script>
-const cues = [
-  "I hope you enjoyed the cake and rasmalai. What are you wishing for?",
-  "Birthday boy, Very Good Morning! Here's you coffee. What changes are you willing to make in your mornings?",
-  "Time to get your blessings for this year. Make one silent wish for yourself.",
-  "If you could have one breakfast every birthday, what would it be? Let’s decide the place and we can have brunch",
-  "Your mission: beat me in at least one game today. If you win, you get a surprise. If I win, I get a birthday hug.",
-  "Birthday pause. Lets take rest and spend some time with our Suggu",
-  "Your final birthday mission: pick your colour vibe for tonight’s dinner and celebration.",
-  "Before we end your birthday, what’s one thing you want to remember about today?"
-];
-
-let completed = 0;
-
-function startAdventure() {
-  document.getElementById('start').classList.add('hidden');
-  document.getElementById('plan').classList.remove('hidden');
-  const cuesDiv = document.getElementById('cues');
-  cues.forEach((cue, index) => {
-    const card = document.createElement('div');
-    card.className = 'cue-card';
-    const fileInputId = 'file-upload-' + index;
-    card.innerHTML = `<p>${cue}</p>
-      <label for='${fileInputId}' class='upload-label'>Upload Memory</label>
-      <input type='file' id='${fileInputId}' accept='image/*' capture='environment' /><br>
-      <textarea rows='3' placeholder='How are you feeling?'></textarea><br>
-      <button onclick='markDone(this)'>Mark as Done</button>`;
-    cuesDiv.appendChild(card);
-
-    const input = card.querySelector(`#${fileInputId}`);
-    input.addEventListener('change', (event) => {
-      const file = event.target.files[0];
-      if (!file) return;
-
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        const img = document.createElement('img');
-        img.src = e.target.result;
-        img.style.maxWidth = '100%';
-        img.style.borderRadius = '10px';
-        img.style.margin = '10px 0';
-
-        const label = card.querySelector('label.upload-label');
-        label.replaceWith(img);
-
-        input.disabled = true;
-      };
-      reader.readAsDataURL(file);
-    });
-  });
-}
-
-function markDone(button) {
-  button.disabled = true;
-  button.innerText = 'Completed ✅';
-  completed++;
-  document.getElementById('progress-bar').style.width = (completed / cues.length * 100) + '%';
-  if (completed === cues.length) {
-    setTimeout(() => {
-      document.getElementById('plan').classList.add('hidden');
-      document.getElementById('final').classList.remove('hidden');
-      confetti();
-    }, 500);
-  }
-}
-
-function confetti() {
-  const duration = 3000;
-  const end = Date.now() + duration;
-  const interval = setInterval(() => {
-    if (Date.now() > end) {
-      clearInterval(interval);
-      return;
-    }
-    const conf = document.createElement('div');
-    conf.innerText = '🎉';
-    conf.style.position = 'fixed';
-    conf.style.left = Math.random() * 100 + '%';
-    conf.style.top = '-20px';
-    conf.style.fontSize = '24px';
-    conf.style.animation = 'fall 3s linear';
-    document.body.appendChild(conf);
-    setTimeout(() => conf.remove(), 3000);
-  }, 100);
+const cues=["Hope you enjoyed the cake. What are you wishing for?","Morning coffee thoughts?","Silent wish for yourself.","Birthday breakfast choice?","Win a game for a surprise.","Rest and Suggu time.","Pick your dinner vibe.","What will you remember today?"];
+let completed=0;
+function startAdventure(){document.getElementById('start').classList.add('hidden');document.getElementById('plan').classList.remove('hidden');const c=document.getElementById('cues');cues.forEach((q,i)=>{const d=document.createElement('div');d.className='cue-card';const f='file-upload-'+i;d.innerHTML=`<p>${q}</p><label for='${f}' class='upload-label'>Upload Memory</label><input type='file' id='${f}' accept='image/*' capture='environment' style='display:none'/><br><textarea rows='2' placeholder='Feeling?'></textarea><br><button onclick='markDone(this)'>Done ✅</button>`;c.appendChild(d);const inp=d.querySelector('#'+f);inp.addEventListener('change',e=>{const file=e.target.files[0];if(!file)return;const r=new FileReader();r.onload=f=>{const img=document.createElement('img');img.src=f.target.result;img.style.maxWidth='100%';img.style.borderRadius='8px';img.style.margin='6px 0';d.querySelector('label.upload-label').replaceWith(img);inp.disabled=true;};r.readAsDataURL(file);});});}
+function markDone(b){b.disabled=true;completed++;document.getElementById('progress-bar').style.width=(completed/cues.length*100)+'%';if(completed===cues.length){setTimeout(()=>{document.getElementById('plan').classList.add('hidden');document.getElementById('final').classList.remove('hidden');},300);}
 }
 </script>
-<style>
-@keyframes fall {
-  to { transform: translateY(100vh); opacity: 0; }
-}
-</style>
-
 </body>
 </html>
+
